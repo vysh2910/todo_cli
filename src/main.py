@@ -1,10 +1,17 @@
+import json
+import pathlib
+
 class Task:
-    def __init__(self, title) -> None:
+    def __init__(self, title, status=False) -> None:
         self.title = title
-        self.status = False
+        self.status = status
     
     def toggle(self) -> None:
         self.status = not self.status
+
+    def json_encoder(obj):
+        return obj.__dict__
+
     def __str__(self) -> str:
         return f"{self.title} :: {'Done' if self.status else 'Not Done'}"
 
@@ -15,7 +22,8 @@ def mainLoop():
         print('1. Display todo list.')
         print('2. Enter a new task.')
         print('3. Edit the list.')
-        print('4. Exit')
+        print('4. Save and Exit.')
+        print('5. Exit Discarding Changes.')
         op = int(input('>> '))
         if op == 1:
             for i,j  in enumerate(todo_list, start=1):
@@ -35,7 +43,12 @@ def mainLoop():
                 todo_list[num-1].toggle()
             if num1 == 2:
                 del todo_list[num-1]
-        else:
+        elif op == 4:
+            save_dat = json.dumps(todo_list, default=Task.json_encoder, indent=2) 
+            with open("todo.json", "w") as f:
+                f.write(save_dat)
+            break
+        elif op == 5:
             break
 
 if __name__ == '__main__':
