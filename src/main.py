@@ -1,5 +1,5 @@
 import json
-import pathlib
+from pathlib import Path
 
 class Task:
     def __init__(self, title, status=False) -> None:
@@ -17,6 +17,14 @@ class Task:
 
 def mainLoop():
     todo_list = []
+    sav_file = Path("todo.json")
+    if sav_file.is_file():
+        print('Loaded task file successfully')
+        with open("todo.json", 'r') as f:
+            dat = json.load(f)
+            for item in dat:
+                todo_list.append(Task(dict['title'], status=dict['status']))
+
     while True:
         print('\n========Todo List========')
         print('1. Display todo list.')
